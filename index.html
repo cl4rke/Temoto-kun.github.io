@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-PH" class="theme-base">
+<head>
+  <meta charset="UTF-8">
+  <title>Temoto-kun@Github</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Random musings">
+  <link rel="stylesheet" type="text/css" href="prebuilt/components.min.css">
+  <link rel="stylesheet" type="text/css" href="prebuilt/themes/dark/dark.min.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    head {
+      display: block !important;
+    }
+
+    title {
+      display: block !important;
+      font-size: 2.5em;
+      color: white;
+      font-family: "Open Sans Condensed Light", "Open Sans Condensed", "Open Sans", "M+ 2p", sans-serif;
+      font-weight: 200;
+      line-height: 1.1;
+      text-transform: lowercase;
+      text-align: center;
+      margin-top: 96px;
+    }
+
+    meta[name="description"] {
+      display: block !important;
+      font-size: 1.5em;
+      color: white;
+      font-family: "Open Sans Condensed Light", "Open Sans Condensed", "Open Sans", "M+ 2p", sans-serif;
+      font-weight: 200;
+      line-height: 1.1;
+      text-transform: lowercase;
+      text-align: center;
+      margin-bottom: 96px;
+    }
+
+    meta[name="description"]::after {
+      content: attr(content);
+    }
+  </style>
+</head>
+<body class="np-view">
+<main class="main centerpiece">
+
+</main>
+
+<script type="text/x-handlebars-template" id="/templates/article">
+  <article class="single-article">
+    <header class="header">
+      <div class="info article-info">
+        <div class="title-container">
+          <hgroup class="titles">
+            <div class="generic-container">
+              <h1 class="title">{{ title }}</h1>
+            </div>
+          </hgroup>
+        </div>
+        <div class="primary">
+          <time class="datetime" datetime="{{ datetime }}">
+            <span class="icon-text date">
+              <span class="text">{{ month }}</span>
+              <span class="icon-wrapper">
+                <span class="icon">{{ date }}</span>
+              </span>
+              <span class="text">{{ year }}</span>
+            </span>
+            <span class="icon-text time">
+              <span class="icon-wrapper">
+                <span class="icon clock-icon" data-time="{{ time }}"></span>
+              </span>
+              <span class="text">{{ time }}</span>
+            </span>
+          </time>
+          <nav class="tag-list">
+            <h2 class="title">
+      <span class="icon-text">
+        <span class="icon-wrapper">
+          <i class="icon lnr lnr-tag"></i>
+        </span>
+        <span class="text">Tags</span>
+      </span>
+            </h2>
+            <ul class="tags">
+              {{#each tags as |tag|}}<li class="tag article-tag"><a class="link" href="#">{{ tag }}</a></li>{{/each}}
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <section class="section -titleless">
+      <h2 class="title">Contents</h2>
+      {{{content}}}
+    </section>
+  </article>
+</script>
+<script src="vendor/rainbow-code/dist/rainbow.min.js"></script>
+<script src="vendor/handlebars/handlebars.min-8baba76.js"></script>
+<script src="vendor/superagent/superagent.js"></script>
+<script src="vendor/moment/moment.js"></script>
+<script src="prebuilt/script.js"></script>
+<script src="articles.js"></script>
+</body>
+</html>

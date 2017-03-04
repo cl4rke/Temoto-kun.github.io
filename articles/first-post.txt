@@ -1,0 +1,7 @@
+First post. Setting things up.
+
+#meta #themes #front-end #development
+
+Revamped this GitHub Pages again. I've been working on my site's front-end--I don't prefer using Bootstrap for
+my more personal projects, so I made up another framework--hopefully lightweight and much much extensible than
+Bootstrap. You can see that framework I've been writing right now.
