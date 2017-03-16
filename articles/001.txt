@@ -1,4 +1,6 @@
-First post. Setting things up.
+First post.
+
+Setting things up.
 
 #meta #themes #front-end #development
 

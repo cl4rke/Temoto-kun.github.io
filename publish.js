@@ -15,6 +15,7 @@ const fs = require('fs'),
 function parseContents(contents) {
     let parsed = {
             title: '',
+            subtitle: '',
             tags: [],
             content: ['']
         },
@@ -33,6 +34,10 @@ function parseContents(contents) {
                 switch (mode) {
                     case 'title':
                         parsed.title = parsed.title.trim();
+                        mode = 'subtitle';
+                        break;
+                    case 'subtitle':
+                        parsed.subtitle = parsed.subtitle.trim();
                         mode = 'tags';
                         break;
                     case 'tags':
