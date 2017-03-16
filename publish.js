@@ -7,8 +7,8 @@
 const fs = require('fs'),
     path = require('path'),
     articlesOutput = 'articles.json',
-    outputDir = 'prebuilt',
-    inputDir = 'articles',
+    outputDir = 'output',
+    inputDir = 'input',
     inputExt = '.txt',
     inputMetadataExt = '.metadata.json';
 
