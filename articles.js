@@ -7,6 +7,11 @@
 (function () {
     var articleTemplate = Handlebars.compile(document.getElementById('/templates/article').innerHTML);
 
+    Handlebars.registerHelper('format', contentArray => marked(contentArray.join('\n\n')));
+    Handlebars.registerHelper('month', date => moment(date).format('MMM'));
+    Handlebars.registerHelper('date', date => moment(date).format('DD'));
+    Handlebars.registerHelper('year', date => moment(date).format('YYYY'));
+
     superagent
         .get('prebuilt/articles.json')
         .end(function (err, res) {

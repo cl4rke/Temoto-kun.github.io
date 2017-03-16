@@ -4,13 +4,16 @@
  * @date 2017-03-05
  */
 
-var fs = require('fs'),
+const fs = require('fs'),
     path = require('path'),
-    moment = require('./vendor/moment/moment'),
-    articlesDir = 'articles';
+    articlesOutput = 'articles.json',
+    outputDir = 'prebuilt',
+    inputDir = 'articles',
+    inputExt = '.txt',
+    inputMetadataExt = '.metadata.json';
 
 function parseContents(contents) {
-    var parsed = {
+    let parsed = {
             title: '',
             tags: [],
             content: ['']
@@ -23,18 +26,17 @@ function parseContents(contents) {
         .replace(/\r/g, '\n')
         .replace(/\t/g, ' ');
 
-    Array.prototype.slice.call(contents)
-        .forEach(function (c) {
-            if (c === '\n' && lastChar === '\n') {
+    Array
+        .from(contents)
+        .forEach((lookahead) => {
+            if (lookahead === '\n' && lastChar === '\n') {
                 switch (mode) {
                     case 'title':
                         parsed.title = parsed.title.trim();
                         mode = 'tags';
                         break;
                     case 'tags':
-                        parsed.tags = parsed.tags.map(function (tag) {
-                            return tag.trim();
-                        });
+                        parsed.tags = parsed.tags.map(tag => tag.trim());
                         mode = 'content';
                         break;
                     case 'content':
@@ -42,88 +44,122 @@ function parseContents(contents) {
                 }
             }
 
-            if (c === '#' && mode === 'tags' && (lastChar === ' ' || lastChar === '\n')) {
+            if (lookahead === '#' && mode === 'tags' && (lastChar === ' ' || lastChar === '\n')) {
                 parsed[mode].push('');
-                lastChar = c;
+                lastChar = lookahead;
                 return;
             }
 
             switch (mode) {
                 case 'tags':
                 case 'content':
-                    parsed[mode][parsed[mode].length - 1] += c;
+                    parsed[mode][parsed[mode].length - 1] += lookahead;
                     break;
                 default:
-                    parsed[mode] += c;
+                    parsed[mode] += lookahead;
                     break;
             }
 
-            lastChar = c;
+            lastChar = lookahead;
         });
 
-    parsed.content = parsed.content.map(function (content) { return content.trim(); });
+    parsed.content = parsed.content.map(content => content.trim());
 
     return parsed;
 }
 
-function getFileAttributes(filename, cb) {
-    fs.stat(filename, cb);
-}
+function getFileMetadata(filename, cb) {
+    let metadataFilename = path.resolve(inputDir, '.' + path.basename(filename, inputExt) + inputMetadataExt);
 
-function readFile(filename, cb) {
-    fs.readFile(filename, function onReadFile(err, contents) {
+    fs.readFile(metadataFilename, (err, res) => {
+        let attributes;
+
         if (err) {
-            return cb(err);
-        }
-
-        return cb(null, parseContents('' + contents));
-    });
-}
-
-function publishFiles(filenames, cb) {
-    var jsonData = [];
-
-    filenames.forEach(function forEachFilename(filename) {
-        filename = path.resolve(articlesDir, filename);
-
-        getFileAttributes(filename, function (err, attributes) {
-            readFile(filename, function (err, data) {
+            return fs.stat(filename, (err, res) => {
                 if (err) {
                     return cb(err);
                 }
 
-                data.datetimeObj = attributes.birthtime;
-                data.datetime = moment(attributes.birthtime).format('YYYY-MM-DD');
-                data.month = moment(attributes.birthtime).format('MMM');
-                data.date = moment(attributes.birthtime).format('DD');
-                data.year = moment(attributes.birthtime).format('YYYY');
-                data.time = moment(attributes.birthtime).format('HH:mm');
+                attributes = {
+                    datetime: res.birthtime
+                };
 
-                jsonData.push(data);
+                fs.writeFile(metadataFilename, JSON.stringify(attributes), err => {
+                    if (err) {
+                        return cb(err);
+                    }
 
-                if (jsonData.length === filenames.length) {
-                    return cb(null, jsonData);
-                }
+                    return cb(null, JSON.stringify(attributes));
+                });
             });
+        }
+
+        return cb(null, res);
+    });
+}
+
+function readFile(filename, cb) {
+    fs.readFile(filename, (err, contents) => {
+        if (err) {
+            return cb(err);
+        }
+
+        contents = parseContents('' + contents);
+
+        getFileMetadata(filename, (err, metadata) => {
+            if (err) {
+                return cb(err);
+            }
+
+            metadata = JSON.parse(metadata);
+
+            Object.keys(metadata).forEach(key => {
+                contents[key] = contents[key] || metadata[key];
+            });
+
+            return cb(null, contents);
         });
     });
 }
 
-fs.readdir(articlesDir, function (err, filenames) {
+function publishFiles(filenames, cb) {
+    let jsonData = [];
+
+    filenames.forEach(filename => {
+        filename = path.resolve(inputDir, filename);
+
+        readFile(filename, (err, data) => {
+            if (err) {
+                return cb(err);
+            }
+
+            jsonData.push(data);
+            if (jsonData.length !== filenames.length) {
+                return;
+            }
+
+            return cb(null, jsonData);
+        });
+    });
+}
+
+fs.readdir(inputDir, (err, filenames) => {
+    let contentFilenames;
+
     if (err) {
         throw err;
     }
-    publishFiles(filenames, function (err, json) {
-        var outputAbsPath = path.resolve('prebuilt', 'articles.json');
+
+    contentFilenames = filenames.filter(filename => path.extname(filename) === inputExt);
+
+    publishFiles(contentFilenames, (err, json) => {
+        let outputAbsPath = path.resolve(outputDir, articlesOutput);
 
         if (err) {
             throw (err);
         }
 
-        json = json
-            .sort(function (a, b) {
-                return b.datetimeObj - a.datetimeObj;
-            });
+        json = json.sort((a, b) => b.datetime - a.datetime);
 
         fs.writeFile(outputAbsPath, JSON.stringify(json));
     });

@@ -5,8 +5,10 @@
   <title>Temoto-kun@Github</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Random musings">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Open+Sans:300" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="prebuilt/components.min.css">
-  <link rel="stylesheet" type="text/css" href="prebuilt/themes/dark/dark.min.css">
+  <link rel="stylesheet" type="text/css" href="prebuilt/dark.min.css">
+  <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -57,37 +59,37 @@
         <div class="title-container">
           <hgroup class="titles">
             <div class="generic-container">
-              <h1 class="title">{{ title }}</h1>
+              <h1 class="title">{{title}}</h1>
             </div>
           </hgroup>
         </div>
         <div class="primary">
           <time class="datetime" datetime="{{ datetime }}">
             <span class="icon-text date">
-              <span class="text">{{ month }}</span>
+              <span class="text">{{month datetime}}</span>
               <span class="icon-wrapper">
-                <span class="icon">{{ date }}</span>
+                <span class="icon">{{date datetime}}</span>
               </span>
-              <span class="text">{{ year }}</span>
+              <span class="text">{{year datetime}}</span>
             </span>
-            <span class="icon-text time">
-              <span class="icon-wrapper">
-                <span class="icon clock-icon" data-time="{{ time }}"></span>
-              </span>
-              <span class="text">{{ time }}</span>
-            </span>
+            <!--<span class="icon-text time">-->
+              <!--<span class="icon-wrapper">-->
+                <!--<span class="icon clock-icon" data-time="{{ time }}"></span>-->
+              <!--</span>-->
+              <!--<span class="text">{{ time }}</span>-->
+            <!--</span>-->
           </time>
           <nav class="tag-list">
             <h2 class="title">
-      <span class="icon-text">
-        <span class="icon-wrapper">
-          <i class="icon lnr lnr-tag"></i>
-        </span>
-        <span class="text">Tags</span>
-      </span>
+              <span class="icon-text">
+                <span class="icon-wrapper">
+                  <i class="icon lnr lnr-tag"></i>
+                </span>
+                <span class="text">Tags</span>
+              </span>
             </h2>
             <ul class="tags">
-              {{#each tags as |tag|}}<li class="tag article-tag"><a class="link" href="#">{{ tag }}</a></li>{{/each}}
+              {{#each tags as |tag|}}<li class="tag article-tag"><a class="link" href="#">{{tag}}</a></li>{{/each}}
             </ul>
           </nav>
         </div>
@@ -95,7 +97,7 @@
     </header>
     <section class="section -titleless">
       <h2 class="title">Contents</h2>
-      {{{content}}}
+      {{{format content}}}
     </section>
   </article>
 </script>
@@ -103,6 +105,7 @@
 <script src="vendor/handlebars/handlebars.min-8baba76.js"></script>
 <script src="vendor/superagent/superagent.js"></script>
 <script src="vendor/moment/moment.js"></script>
+<script src="vendor/marked/marked.js"></script>
 <script src="prebuilt/script.js"></script>
 <script src="articles.js"></script>
 </body>

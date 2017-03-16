@@ -1,0 +1,25 @@
+{
+  "name": "@theoryofnekomata/github-page",
+  "version": "1.0.0",
+  "description": "Random musings.",
+  "main": "publish.js",
+  "scripts": {
+    "start": "node publish.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Temoto-kun/Temoto-kun.github.io.git"
+  },
+  "keywords": [
+    "Web",
+    "GitHub",
+    "personal"
+  ],
+  "author": "TheoryOfNekomata <allan.crisostomo@outlook.com>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Temoto-kun/Temoto-kun.github.io/issues"
+  },
+  "homepage": "https://github.com/Temoto-kun/Temoto-kun.github.io#readme"
+}
