@@ -13,13 +13,13 @@
     Handlebars.registerHelper('year', date => moment(date).format('YYYY'));
 
     superagent
-        .get('prebuilt/articles.json')
+        .get('output/articles.json')
         .end(function (err, res) {
             var script = document.createElement('script');
             res.body.forEach(function (article) {
                 document.getElementsByTagName('main')[0].innerHTML += articleTemplate(article);
             });
-            script.src = 'prebuilt/script.js';
+            script.src = 'vendor/tesseract/script.js';
             script.type = 'text/javascript';
             document.head.appendChild(script);
         });
